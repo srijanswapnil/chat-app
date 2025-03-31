@@ -1,13 +1,16 @@
 import express from 'express';
-import { chats } from "./data/data.js"; 
+
 import dotenv from 'dotenv'
 
 import connectDB from './config/db.js';
+import userRoutes from './routes/userRoutes.js'
+
 const app = express();
 
 dotenv.config()
 connectDB()
 
+app.use(express.json())
 
 app.get('/', (req, res) => {
     res.send("API is running");
