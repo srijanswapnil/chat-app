@@ -11,9 +11,12 @@ export const registerUser=asyncHandler(async(req,res)=>{
         throw new Error("Please enter details")
     }
     const userExists=await User.findOne({email})
+
+    console.log(userExists)
+
     if(userExists){
         res.status(400)
-        throw new Error("User aldready exists")
+        throw new Error("User already exists")
     }
 
     const user= await User.create({
@@ -51,3 +54,26 @@ export const authUser = asyncHandler(async (req, res) => {
     }
   });
   
+
+// /api/user?search=p
+export const allUsers = asyncHandler(async (req, res) => {
+    if (!req.user) {
+        res.status(401);
+        throw new Error("Not authorized");
+    }
+
+    const keyword = req.query.search
+        ? {
+              $or: [
+                  { name: { $regex: req.query.search, $options: "i" } },
+                  { email: { $regex: req.query.search, $options: "i" } },
+              ],
+          }
+        : {};
+
+    
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+ 
+    res.json(users);
+});
+
