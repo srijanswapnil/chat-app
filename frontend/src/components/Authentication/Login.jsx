@@ -9,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
-    e.preventDefault(); // ✅ Prevents page refresh
+    e.preventDefault(); 
     setLoading(true);
 
     if (!email || !password) {
