@@ -7,17 +7,18 @@ const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     
     if (!userInfo) {
-      navigate("/");  // Redirect to login if user not found
+      navigate("/");  
     } else {
       setUser(userInfo);
     }
-  }, []); // No need for [navigate]
+  }, []); 
 
   return (
     <ChatContext.Provider
