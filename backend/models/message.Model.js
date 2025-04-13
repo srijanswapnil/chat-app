@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const messageModel=mongoose.Schema(
     {
-        content:{type:string ,trim:true},
+        content:{type:String ,trim:true},
         sender:[{
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"

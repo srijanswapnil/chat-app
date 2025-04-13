@@ -37,19 +37,20 @@ const MyChat = ({ fetchAgain }) => {
 
   return (
     <div
-      className="bg-white rounded p-3"
-      style={{ width: "30%", height: "100%" }}
+      className={`bg-white rounded p-3 
+      w-full sm:w-[40%] md:w-[30%] h-full 
+      ${selectedChat ? "hidden sm:block" : "block"}`}
     >
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="m-0">My Chats</h5>
+      <div className="flex justify-between items-center mb-3">
+        <h5 className="m-0 text-lg font-semibold">My Chats</h5>
         <GroupChatModal>
           <button className="btn btn-outline-primary btn-sm">
-            New Group Chat +
+            New Group +
           </button>
         </GroupChatModal>
       </div>
 
-      <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
+      <div className="max-h-[70vh] overflow-y-auto">
         {chats ? (
           chats.map((chat) => {
             const senderName = !chat.isGroupChat
@@ -60,9 +61,12 @@ const MyChat = ({ fetchAgain }) => {
               <button
                 key={chat._id}
                 onClick={() => setSelectedChat(chat)}
-                className={`w-100 text-start p-2 mb-2 rounded ${
-                  selectedChat === chat ? "bg-primary text-white" : "bg-light"
-                }`}
+                className={`w-full text-start p-2 mb-2 rounded transition-all
+                  ${
+                    selectedChat === chat
+                      ? "bg-primary text-white"
+                      : "bg-gray-100 hover:bg-gray-200"
+                  }`}
               >
                 {senderName}
               </button>

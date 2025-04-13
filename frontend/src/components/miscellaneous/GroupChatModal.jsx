@@ -82,7 +82,6 @@ const GroupChatModal = ({ children }) => {
         },
         config
       );
-      console.log("Group Chat Created: ", data);
 
       setChats([data, ...chats]);
       toast.success("Group Chat Created Successfully");
