@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../axios";
 import { toast } from "react-hot-toast";
 import { ChatState } from "../Context/ChatProvider";
 import ChatLoading from "./ChatLoading";
@@ -20,7 +20,7 @@ const MyChat = ({ fetchAgain }) => {
       };
 
       const { data } = await axios.get(
-        "http://localhost:5000/api/chat",
+        "/api/chat",
         config
       );
       setChats(data);

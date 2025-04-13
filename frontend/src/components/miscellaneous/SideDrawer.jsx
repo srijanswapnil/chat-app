@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../axios";
 import React, { useState } from "react";
 import { FaBell } from "react-icons/fa";
 import { ChatState } from "../../Context/ChatProvider";
@@ -49,7 +49,7 @@ const SideDrawer = () => {
       };
 
       const { data } = await axios.get(
-        `http://localhost:5000/api/user?search=${search}`,
+        `/api/user?search=${search}`,
         config
       );
 
@@ -71,7 +71,7 @@ const SideDrawer = () => {
         },
       };
       const { data } = await axios.post(
-        "http://localhost:5000/api/chat",
+        "/api/chat",
         { userId },
         config
       );

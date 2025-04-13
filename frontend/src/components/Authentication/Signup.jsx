@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../../axios";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
@@ -77,7 +77,7 @@ const Signup = () => {
       };
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/user/signup",
+        "/api/user/signup",
         { name, email, password, pic },
         config
       );

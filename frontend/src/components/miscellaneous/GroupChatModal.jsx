@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../../axios";
 import toast from "react-hot-toast";
 import { ChatState } from "../../Context/ChatProvider";
 import UserListItem from "../UserAvatar/UserListItem";
@@ -31,7 +31,7 @@ const GroupChatModal = ({ children }) => {
         },
       };
       const { data } = await axios.get(
-        `http://localhost:5000/api/user?search=${query}`,
+        `/api/user?search=${query}`,
         config
       );
       setSearchResult(data);
@@ -75,7 +75,7 @@ const GroupChatModal = ({ children }) => {
         },
       };
       const { data } = await axios.post(
-        "http://localhost:5000/api/chat/group",
+        "/api/chat/group",
         {
           name: groupChatName,
           users: JSON.stringify(selectedUsers.map((u) => u._id)),

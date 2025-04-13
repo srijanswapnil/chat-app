@@ -4,12 +4,12 @@ import { getSender, getSenderFull } from "../config/ChatLogics";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { FaSpinner } from "react-icons/fa";
-import axios from "axios";
+import axios from "../axios";
 import toast from "react-hot-toast";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -37,7 +37,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       };
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/message",
+        "/api/message",
         { content: newMessage, chatId: selectedChat?._id },
         config
       );
@@ -93,7 +93,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:5000/api/message/${selectedChat?._id}`,
+        `/api/message/${selectedChat?._id}`,
         config
       );
 
