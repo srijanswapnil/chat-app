@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --openssl-legacy-provider",
+    "build": "vite build --openssl-legacy-provider",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --openssl-legacy-provider"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

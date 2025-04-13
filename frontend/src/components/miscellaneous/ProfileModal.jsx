@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const ProfileModal = ({ user, onClose }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-20  bg-opacity-40 backdrop-blur-sm">
+    <div className="fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-40  backdrop-blur-sm">
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}

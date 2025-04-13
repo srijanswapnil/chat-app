@@ -48,10 +48,7 @@ const SideDrawer = () => {
         },
       };
 
-      const { data } = await axios.get(
-        `/api/user?search=${search}`,
-        config
-      );
+      const { data } = await axios.get(`/api/user?search=${search}`, config);
 
       setSearchResult(data);
       setLoading(false);
@@ -70,11 +67,7 @@ const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(
-        "/api/chat",
-        { userId },
-        config
-      );
+      const { data } = await axios.post("/api/chat", { userId }, config);
 
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
 
@@ -86,7 +79,7 @@ const SideDrawer = () => {
       setLoadingChat(false);
     }
   };
-
+  
   return (
     <>
       <div className="bg-gray-800 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-6 border-b border-gray-600 shadow-md">
@@ -137,7 +130,10 @@ const SideDrawer = () => {
                   >
                     {notif.chat.isGroupChat
                       ? `New message in ${notif.chat.chatName}`
-                      : `New message from ${getSender(user,notif.chat.users)} `}
+                      : `New message from ${getSender(
+                          user,
+                          notif.chat.users
+                        )} `}
                   </div>
                 ))}
               </div>
@@ -164,11 +160,14 @@ const SideDrawer = () => {
             <ul className="dropdown-menu absolute right-0 mt-2 bg-gray-800 text-white shadow-lg border border-gray-700 rounded-md w-40 z-50">
               <li>
                 <button
-                  className=" text-black w-full text-left px-4 py-2 hover:bg-gray-700 rounded-t-md"
-                  onClick={() => setProfileOpen(true)}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-700 rounded-t-md"
+
+                  onClick={() => setProfileOpen(true)} 
+                  
                 >
                   My Profile
                 </button>
+                
               </li>
               <li>
                 <button
@@ -179,10 +178,11 @@ const SideDrawer = () => {
                 </button>
               </li>
             </ul>
+            
           </div>
         </div>
       </div>
-
+      
       {/* Search Drawer */}
       {drawerOpen && (
         <div className="fixed top-0 left-0 w-full sm:w-80 h-full bg-gray-900 text-white shadow-lg z-50 p-4 transition-transform duration-300 overflow-y-auto">
@@ -227,9 +227,14 @@ const SideDrawer = () => {
           {loadingChat && <ChatLoading />}
         </div>
       )}
+      {profileOpen && (
+                  <ProfileModal
+                    user={user}
+                    onClose={() => setProfileOpen(false)}
+                  />
+                )}
     </>
   );
 };
 
 export default SideDrawer;
-
