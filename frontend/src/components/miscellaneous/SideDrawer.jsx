@@ -34,6 +34,11 @@ const SideDrawer = () => {
     navigate("/");
   };
 
+  const handleModal = () => {
+    console.log("Chutiya vs code");
+    setProfileOpen(true);
+  };
+
   const handleSearch = async () => {
     if (!search.trim()) {
       toast.error("Please enter something to search!");
@@ -79,7 +84,7 @@ const SideDrawer = () => {
       setLoadingChat(false);
     }
   };
-  
+
   return (
     <>
       <div className="bg-gray-800 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 px-6 border-b border-gray-600 shadow-md">
@@ -160,14 +165,11 @@ const SideDrawer = () => {
             <ul className="dropdown-menu absolute right-0 mt-2 bg-gray-800 text-white shadow-lg border border-gray-700 rounded-md w-40 z-50">
               <li>
                 <button
-                  className="w-full text-left px-4 py-2 hover:bg-gray-700 rounded-t-md"
-
-                  onClick={() => setProfileOpen(true)} 
-                  
+                  className=" text-black w-full text-left px-4 py-2 hover:bg-gray-700 rounded-t-md"
+                  onClick={handleModal}
                 >
                   My Profile
                 </button>
-                
               </li>
               <li>
                 <button
@@ -178,11 +180,10 @@ const SideDrawer = () => {
                 </button>
               </li>
             </ul>
-            
           </div>
         </div>
       </div>
-      
+
       {/* Search Drawer */}
       {drawerOpen && (
         <div className="fixed top-0 left-0 w-full sm:w-80 h-full bg-gray-900 text-white shadow-lg z-50 p-4 transition-transform duration-300 overflow-y-auto">
@@ -228,11 +229,8 @@ const SideDrawer = () => {
         </div>
       )}
       {profileOpen && (
-                  <ProfileModal
-                    user={user}
-                    onClose={() => setProfileOpen(false)}
-                  />
-                )}
+        <ProfileModal user={user} onClose={() => setProfileOpen(false)} />
+      )}
     </>
   );
 };
