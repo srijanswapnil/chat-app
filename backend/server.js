@@ -5,7 +5,7 @@ import userRoutes from './routes/userRoutes.js'
 import chatRoutes from './routes/chatRoutes.js'
 import cors from "cors"
 import messageRoutes from './routes/messageRoutes.js'
-import path from 'path'
+
 const app = express();
 app.use(cors());
 dotenv.config()
@@ -20,23 +20,6 @@ app.use('/api/chat',chatRoutes)
 app.use('/api/user',userRoutes)
 app.use('/api/message',messageRoutes)
 // .............   DEPLOYMENT  ................       //
-
-
-const __dirname1 = path.resolve();
-
-if (process.env.NODE_ENV === "production") {
-  console.log("jello bhai")
-
-  app.use(express.static(path.join(__dirname1, "/frontend/dist")));
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running..");
-  });
-}
-
 
 //      ......................................       //
 
