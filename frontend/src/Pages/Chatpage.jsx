@@ -7,7 +7,7 @@ import ChatBox from "../components/ChatBox";
 const Chatpage = () => {
   useEffect(() => {
     window.location.reload();
-  });
+  },[]);
   const { user } = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
   return (
