@@ -5,9 +5,14 @@ import MyChat from "../components/MyChat";
 import ChatBox from "../components/ChatBox";
 
 const Chatpage = () => {
+  const [h, setH] = useState(0);
+
   useEffect(() => {
-    window.location.reload();
-  },[]);
+    if (h == 0) {
+      window.location.reload();
+      setH((h) => h + 1);
+    }
+  }, []);
   const { user } = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
   return (
