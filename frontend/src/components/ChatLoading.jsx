@@ -1,5 +1,3 @@
-import React from 'react'
-
 function ChatLoading() {
   return (
     <div className="flex flex-col gap-3">

@@ -3,38 +3,40 @@ import User from '../models/user.Model.js'
 import { generateToken } from '../config/generateToken.js'
 
 
-export const registerUser=asyncHandler(async(req,res)=>{
-    const{name,email,password,pic}=req.body
+export const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password, pic } = req.body;
 
-    if(!name || !password ||!email){
-        res.status(400)
-        throw new Error("Please enter details")
-    }
-    const userExists=await User.findOne({email})
+  console.log("Incoming request body:", req.body); // 🐞 Add this line
 
-    console.log(userExists)
+  if (!name || !password || !email) {
+    res.status(400);
+    throw new Error("Please enter details");
+  }
 
-    if(userExists){
-        res.status(400)
-        throw new Error("User already exists")
-    }
+  const userExists = await User.findOne({ email });
+  console.log("User exists:", userExists); // 🐞 Useful to debug existing users
 
-    const user= await User.create({
-        name,email,password,pic,
-    })
-    if(user){
-        res.status(201).json({
-            _id:user._id,
-            name:user.name,
-            email:user.email,
-            pic:user.pic,
-            token:generateToken(user._id)
-        })
-    }else{
-        res.status(400)
-        throw new Error("User not found")
-    }
+  if (userExists) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
+  const user = await User.create({ name, email, password, pic });
+
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      pic: user.pic,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("User not found");
+  }
 });
+
 export const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
   
@@ -46,7 +48,7 @@ export const authUser = asyncHandler(async (req, res) => {
         name: user.name,
         email: user.email,
         pic: user.pic,
-        token: generateToken(user._id), // 🔑 JWT Token
+        token: generateToken(user._id),
       });
     } else {
       res.status(401);
@@ -62,8 +64,7 @@ export const allUsers = asyncHandler(async (req, res) => {
         throw new Error("Not authorized");
     }
 
-    const keyword = req.query.search
-        ? {
+    const keyword = req.query.search?{
               $or: [
                   { name: { $regex: req.query.search, $options: "i" } },
                   { email: { $regex: req.query.search, $options: "i" } },

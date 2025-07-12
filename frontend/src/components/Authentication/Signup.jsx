@@ -8,6 +8,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
   const [pic, setPic] = useState("");
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -94,77 +95,101 @@ const Signup = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-96 border border-gray-200 p-6">
-      <h2 className="text-3xl font-bold text-center mb-6">Sign Up</h2>
-      <form onSubmit={submitHandler}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Full Name</label>
-          <input
-            type="text"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 transition"
-            placeholder="Enter your full name"
-            value={name}
-            required
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Email</label>
-          <input
-            type="email"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 transition"
-            placeholder="Enter your email"
-            value={email}
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Password</label>
-          <input
-            type="password"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 transition"
-            placeholder="Create a password"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Confirm Password</label>
-          <input
-            type="password"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 transition"
-            placeholder="Confirm your password"
-            value={confirmpassword}
-            required
-            onChange={(e) => setConfirmpassword(e.target.value)}
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-sm font-medium">Upload Your Picture</label>
-          <input
-            type="file"
-            className="w-full text-sm file:py-2 file:px-4 file:rounded-lg file:bg-green-50 file:text-green-700 hover:file:bg-green-100 transition"
-            accept="image/*"
-            onChange={(e) => postDetails(e.target.files[0])}
-          />
-          {pic && <img src={pic} alt="Preview" className="mt-2 rounded-lg w-24 h-24" />}
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition font-semibold shadow-md"
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4">
+      <div className="bg-gray-800/80 backdrop-blur-sm text-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-700/50 p-8 relative overflow-hidden">
+        {/* Decorative gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-blue-500/10 pointer-events-none"></div>
+        
+        <div className="relative z-10">
+          <h2 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+            Sign Up
+          </h2>
           
-        >
-          Sign Up
-        </button>
-      </form>
-      <p className="text-center text-sm mt-4">
-        Already have an account?{" "}
-        <a href="/login" className="text-green-600 hover:underline">
-          Login
-        </a>
-      </p>
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+              <input
+                type="text"
+                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
+                placeholder="Enter your full name"
+                value={name}
+                required
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+              <input
+                type="email"
+                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
+                placeholder="Enter your email"
+                value={email}
+                required
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+              <input
+                type="password"
+                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
+                placeholder="Create a password"
+                value={password}
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
+              <input
+                type="password"
+                className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
+                placeholder="Confirm your password"
+                value={confirmpassword}
+                required
+                onChange={(e) => setConfirmpassword(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Upload Your Picture</label>
+              <input
+                type="file"
+                className="w-full text-sm file:py-3 file:px-4 file:rounded-lg file:bg-green-600/20 file:text-green-400 file:border-0 hover:file:bg-green-600/30 transition-all duration-200 file:font-medium text-gray-300 border border-gray-600 rounded-lg bg-gray-700/50"
+                accept="image/*"
+                onChange={(e) => postDetails(e.target.files[0])}
+              />
+              {pic && (
+                <div className="mt-4 flex justify-center">
+                  <img 
+                    src={pic} 
+                    alt="Preview" 
+                    className="rounded-xl w-24 h-24 object-cover border-2 border-gray-600 shadow-lg" 
+                  />
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={submitHandler}
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 font-semibold shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Sign Up
+            </button>
+          </div>
+
+          <p className="text-center text-sm mt-6 text-gray-400">
+            Already have an account?{" "}
+            <a href="/login" className="text-green-400 hover:text-green-300 hover:underline transition-colors duration-200 font-medium">
+              Home
+            </a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

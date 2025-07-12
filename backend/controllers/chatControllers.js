@@ -84,7 +84,7 @@ export const createGroupChat = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: "Invalid users format. Must be a valid JSON array." });
     }
 
-    if (!Array.isArray(users) || users.length < 2) {
+    if (!Array.isArray(users) || users.length < 1) {
         return res.status(400).json({ message: "A group chat must have at least 2 members." });
     }
 

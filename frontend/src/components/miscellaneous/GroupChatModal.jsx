@@ -17,12 +17,10 @@ const GroupChatModal = ({ children }) => {
 
   const handleSearch = async (query) => {
     setSearchQuery(query);
-
     if (!query.trim()) {
       setSearchResult([]);
       return;
     }
-
     try {
       setLoading(true);
       const config = {
@@ -30,12 +28,9 @@ const GroupChatModal = ({ children }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(
-        `/api/user?search=${query}`,
-        config
-      );
+      const { data } = await axios.get(`/api/user?search=${query}`, config);
       setSearchResult(data);
-    } catch (error) {
+    } catch {
       toast.error("Failed to load search results");
     } finally {
       setLoading(false);
@@ -82,11 +77,10 @@ const GroupChatModal = ({ children }) => {
         },
         config
       );
-
       setChats([data, ...chats]);
       toast.success("Group Chat Created Successfully");
       handleReset();
-    } catch (error) {
+    } catch {
       toast.error("Failed to create group chat");
     }
   };
@@ -103,52 +97,56 @@ const GroupChatModal = ({ children }) => {
 
       {/* Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-all">
-          <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl w-[95%] max-w-md relative">
-
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 transition-all">
+          <div className="bg-white rounded-xl shadow-2xl w-[95%] sm:w-[90%] md:w-[400px] lg:w-[450px] p-6 relative">
             {/* Close Button */}
             <button
               onClick={handleReset}
-              className="absolute top-3 right-3 text-gray-400 hover:text-black text-xl font-bold transition"
+              className="absolute top-3 right-3 text-gray-400 hover:text-black text-2xl font-bold"
             >
               ×
             </button>
 
-            <h2 className="text-xl font-semibold text-center mb-5 text-gray-800">
+            {/* Title */}
+            <h2 className="text-2xl font-semibold text-center mb-5 text-gray-800">
               Create Group Chat
             </h2>
 
+            {/* Group Name */}
             <input
               type="text"
               value={groupChatName}
               onChange={(e) => setGroupChatName(e.target.value)}
               placeholder="Group Name"
-              className="w-full mb-4 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full mb-4 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
             />
 
+            {/* Search Users */}
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Add People"
-              className="w-full mb-4 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              placeholder="Search Users"
+              className="w-full mb-3 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
             />
 
             {/* Selected Users */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              {selectedUsers.map((u) => (
-                <UserBadgeItem
-                  key={u._id}
-                  user={u}
-                  handleFunction={() => handleDelete(u)}
-                />
-              ))}
-            </div>
+            {selectedUsers.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {selectedUsers.map((u) => (
+                  <UserBadgeItem
+                    key={u._id}
+                    user={u}
+                    handleFunction={() => handleDelete(u)}
+                  />
+                ))}
+              </div>
+            )}
 
-            {/* Search Results */}
-            <div className="mb-5 max-h-40 overflow-y-auto">
+            {/* Search Result */}
+            <div className="mb-4 max-h-48 overflow-y-auto">
               {loading ? (
-                <div className="text-center text-sm text-gray-500">Loading...</div>
+                <div className="text-center text-gray-500">Searching...</div>
               ) : (
                 searchResult?.slice(0, 4).map((user) => (
                   <UserListItem
@@ -160,10 +158,11 @@ const GroupChatModal = ({ children }) => {
               )}
             </div>
 
+            {/* Submit Button */}
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 px-4 rounded-lg w-full hover:opacity-90 transition disabled:opacity-50"
+              className="w-full py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:opacity-90 text-white font-semibold rounded-lg transition disabled:opacity-50"
             >
               {loading ? "Creating..." : "Create Group"}
             </button>

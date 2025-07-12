@@ -1,5 +1,5 @@
 import axios from "../../axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBell } from "react-icons/fa";
 import { ChatState } from "../../Context/ChatProvider";
 import ProfileModal from "./ProfileModal";
@@ -16,7 +16,8 @@ const SideDrawer = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
-  const [showNotifDropdown, setShowNotifDropdown] = useState(false); // Notification dropdown toggle
+  const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
   const {
     user,
@@ -27,6 +28,23 @@ const SideDrawer = () => {
     setNotification,
   } = ChatState();
   const navigate = useNavigate();
+
+  // Handle clicking outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showProfileDropdown && !event.target.closest('.profile-dropdown')) {
+        setShowProfileDropdown(false);
+      }
+      if (showNotifDropdown && !event.target.closest('.notification-dropdown')) {
+        setShowNotifDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showProfileDropdown, showNotifDropdown]);
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
@@ -107,11 +125,12 @@ const SideDrawer = () => {
 
         {/* Notification and Profile */}
         <div className="flex items-center gap-4 sm:gap-6 justify-end">
-          <div className="relative">
+          {/* Notification Bell */}
+          <div className="relative notification-dropdown">
             <FaBell
               size={24}
               className="cursor-pointer hover:text-amber-500 transition duration-300"
-              onClick={() => setShowNotifDropdown(!showNotifDropdown)} // Toggle notification dropdown
+              onClick={() => setShowNotifDropdown(!showNotifDropdown)}
             />
 
             {/* Notification badge */}
@@ -127,10 +146,11 @@ const SideDrawer = () => {
                 {notification.map((notif) => (
                   <div
                     key={notif._id}
-                    className="px-4 py-2 hover:bg-gray-700 cursor-pointer text-sm border-b border-gray-700 last:border-b-0"
+                    className="px-4 py-2 hover:bg-gray-700 cursor-pointer text-sm border-b border-gray-700 last:border-b-0 transition duration-200"
                     onClick={() => {
                       setSelectedChat(notif.chat);
                       setNotification(notification.filter((n) => n !== notif));
+                      setShowNotifDropdown(false);
                     }}
                   >
                     {notif.chat.isGroupChat
@@ -143,14 +163,23 @@ const SideDrawer = () => {
                 ))}
               </div>
             )}
+
+            {/* No notifications message */}
+            {showNotifDropdown && notification.length === 0 && (
+              <div className="absolute right-0 mt-2 w-64 bg-gray-800 text-white rounded-md shadow-lg border border-gray-600 z-50">
+                <div className="px-4 py-2 text-sm text-gray-400">
+                  No new notifications
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="dropdown relative">
+          {/* Profile Dropdown */}
+          <div className="relative profile-dropdown">
             <button
               className="flex items-center focus:outline-none"
               type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
             >
               <img
                 src={
@@ -158,28 +187,33 @@ const SideDrawer = () => {
                   "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
                 }
                 alt="avatar"
-                className="w-10 h-10 rounded-full border-2 border-gray-500 cursor-pointer object-cover"
+                className="w-10 h-10 rounded-full border-2 border-gray-500 cursor-pointer object-cover hover:border-amber-500 transition duration-300"
               />
             </button>
 
-            <ul className="dropdown-menu absolute right-0 mt-2 bg-gray-800 text-white shadow-lg border border-gray-700 rounded-md w-40 z-50">
-              <li>
+            {/* Profile Dropdown Menu */}
+            {showProfileDropdown && (
+              <div className="absolute right-0 mt-2 bg-gray-800 text-white shadow-lg border border-gray-600 rounded-md w-40 z-50">
                 <button
-                  className=" text-black w-full text-left px-4 py-2 hover:bg-gray-700 rounded-t-md"
-                  onClick={handleModal}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-700 rounded-t-md transition duration-200"
+                  onClick={() => {
+                    handleModal();
+                    setShowProfileDropdown(false);
+                  }}
                 >
                   My Profile
                 </button>
-              </li>
-              <li>
                 <button
-                  className="w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700 rounded-b-md"
-                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700 rounded-b-md transition duration-200"
+                  onClick={() => {
+                    handleLogout();
+                    setShowProfileDropdown(false);
+                  }}
                 >
                   Logout
                 </button>
-              </li>
-            </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -203,11 +237,11 @@ const SideDrawer = () => {
               placeholder="Enter name or email"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none"
+              className="w-full px-4 py-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
             <button
               onClick={handleSearch}
-              className="bg-amber-500 px-4 py-2 rounded-md hover:bg-amber-600 transition"
+              className="bg-amber-500 px-4 py-2 rounded-md hover:bg-amber-600 transition whitespace-nowrap"
             >
               Go
             </button>
@@ -228,6 +262,8 @@ const SideDrawer = () => {
           {loadingChat && <ChatLoading />}
         </div>
       )}
+
+      {/* Profile Modal */}
       {profileOpen && (
         <ProfileModal user={user} onClose={() => setProfileOpen(false)} />
       )}
