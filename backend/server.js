@@ -39,10 +39,11 @@ io.on("connection", (socket) => {
   console.log("⚡ Connected to socket.io");
 
   socket.on("setup", (userData) => {
-    socket.join(userData._id);
-    socket.userId = userData._id;
-    socket.emit("connected");
-  });
+  socket.join(userData._id);
+  socket.userId = userData._id;
+  console.log(`✅ User ${userData.name || userData._id} joined room: ${userData._id}`);
+  socket.emit("connected");
+});
 
   socket.on("join chat", (room) => {
     socket.join(room);
@@ -53,15 +54,22 @@ io.on("connection", (socket) => {
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
   socket.on("newMessage", (newMessageReceived) => {
-    const chat = newMessageReceived.chat;
-    if (!chat?.users) return console.log("⚠️ Chat.users not defined");
+  const chat = newMessageReceived.chat;
+  if (!chat?.users) return console.log("⚠️ Chat.users not defined");
 
-    chat.users.forEach((user) => {
-      if (user._id === newMessageReceived.sender._id) return;
-      socket.to(user._id).emit("message received", newMessageReceived);
-      socket.to(user._id).emit("notification received", newMessageReceived);
-    });
+  console.log(`📤 Broadcasting message to ${chat.users.length} users`);
+
+  chat.users.forEach((user) => {
+    if (user._id === newMessageReceived.sender._id) return;
+    
+    console.log(`📨 Sending to user: ${user._id}`);
+    // Send to user's personal room
+    socket.to(user._id).emit("message received", newMessageReceived);
+    
+    // Optional: Send separate notification event
+    socket.to(user._id).emit("notification received", newMessageReceived);
   });
+});
 
   socket.on("disconnect", () => {
     console.log("🔌 User Disconnected");
