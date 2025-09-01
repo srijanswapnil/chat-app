@@ -11,11 +11,32 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Correct CORS setup
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Allow localhost for development
+    if (origin.includes('localhost')) return callback(null, true);
+    
+    // Allow your production domain
+    const productionUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    if (origin === productionUrl) return callback(null, true);
+    
+    // Allow Vercel preview deployments (any URL with your project pattern)
+    if (origin.match(/^https:\/\/talk-a-tive-[a-z0-9-]+-srijans-projects-[a-z0-9]+\.vercel\.app$/)) {
+      return callback(null, true);
+    }
+    
+    console.log(`CORS blocked origin: ${origin}`);
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
-}));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 
 connectDB();
 
@@ -29,10 +50,7 @@ const server = app.listen(PORT, () => console.log(`Server started on PORT ${PORT
 
 const io = new Server(server, {
   pingTimeout: 60000,
-  cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    credentials: true,
-  },
+  cors: corsOptions
 });
 
 io.on("connection", (socket) => {
