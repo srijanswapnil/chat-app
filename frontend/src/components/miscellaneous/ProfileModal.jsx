@@ -87,19 +87,7 @@ const ProfileModal = ({ user, onClose }) => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.4 }}
             >
-              <div className="bg-gray-700/50 rounded-lg p-3">
-                <p className="text-sm text-gray-300">
-                  <span className="font-semibold">Status:</span> Online
-                </p>
-              </div>
               
-              {user.bio && (
-                <div className="bg-gray-700/50 rounded-lg p-3">
-                  <p className="text-sm text-gray-300">
-                    <span className="font-semibold">Bio:</span> {user.bio}
-                  </p>
-                </div>
-              )}
             </motion.div>
           </div>
         </motion.div>

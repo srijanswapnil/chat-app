@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "../../axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -55,7 +55,7 @@ const Signup = () => {
 
   // Handle Sign Up
   const submitHandler = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     setLoading(true);
 
     if (!name || !email || !password || !confirmpassword) {
@@ -86,7 +86,7 @@ const Signup = () => {
       console.log("Signup successful:", data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      navigate("/chats"); // Use navigate instead of history.push
+      navigate("/login");
     } catch (error) {
       alert(`Signup failed: ${error.response?.data?.message || error.message}`);
       console.error("Error:", error.response?.data || error.message);
@@ -99,15 +99,17 @@ const Signup = () => {
       <div className="bg-gray-800/80 backdrop-blur-sm text-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-700/50 p-8 relative overflow-hidden">
         {/* Decorative gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-blue-500/10 pointer-events-none"></div>
-        
+
         <div className="relative z-10">
           <h2 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
             Sign Up
           </h2>
-          
+
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Full Name
+              </label>
               <input
                 type="text"
                 className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
@@ -119,7 +121,9 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Email
+              </label>
               <input
                 type="email"
                 className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
@@ -131,7 +135,9 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Password
+              </label>
               <input
                 type="password"
                 className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
@@ -143,7 +149,9 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Confirm Password
+              </label>
               <input
                 type="password"
                 className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
@@ -155,7 +163,9 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Upload Your Picture</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Upload Your Picture
+              </label>
               <input
                 type="file"
                 className="w-full text-sm file:py-3 file:px-4 file:rounded-lg file:bg-green-600/20 file:text-green-400 file:border-0 hover:file:bg-green-600/30 transition-all duration-200 file:font-medium text-gray-300 border border-gray-600 rounded-lg bg-gray-700/50"
@@ -164,10 +174,10 @@ const Signup = () => {
               />
               {pic && (
                 <div className="mt-4 flex justify-center">
-                  <img 
-                    src={pic} 
-                    alt="Preview" 
-                    className="rounded-xl w-24 h-24 object-cover border-2 border-gray-600 shadow-lg" 
+                  <img
+                    src={pic}
+                    alt="Preview"
+                    className="rounded-xl w-24 h-24 object-cover border-2 border-gray-600 shadow-lg"
                   />
                 </div>
               )}
@@ -184,9 +194,12 @@ const Signup = () => {
 
           <p className="text-center text-sm mt-6 text-gray-400">
             Already have an account?{" "}
-            <a href="/login" className="text-green-400 hover:text-green-300 hover:underline transition-colors duration-200 font-medium">
-              Home
-            </a>
+            <Link
+              to="/login"
+              className="text-blue-400 hover:text-blue-300 hover:underline transition-colors duration-200 font-medium"
+            >
+              Login
+            </Link>
           </p>
         </div>
       </div>

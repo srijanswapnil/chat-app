@@ -9,13 +9,12 @@ export const accessChat = asyncHandler(async (req, res) => {
         console.log("userID param not sent with request");
         return res.sendStatus(400);
     }
-
     try {
         let isChat = await Chat.find({
             isGroupChat: false,
             $and: [
                 { users: { $elemMatch: { $eq: req.user._id } } },
-                { users: { $elemMatch: { $eq: userId } } } // Fixed typo
+                { users: { $elemMatch: { $eq: userId } } } 
             ],
         })
             .populate("users", "-password")
@@ -58,15 +57,15 @@ export const fetchChats = asyncHandler(async (req, res) => {
         .populate("latestMessage")
         .sort({ updatedAt: -1 });
 
-        // Populate latestMessage.sender with User details
+        
         chats = await User.populate(chats, {
             path: "latestMessage.sender",
             select: "name pic email"
         });
 
-        res.status(200).json(chats); // ✅ Send the populated chats
+        res.status(200).json(chats); 
     } catch (error) {
-        console.error(error); // Log for debugging
+        console.error(error); 
         res.status(400).json({ message: error.message });
     }
 });

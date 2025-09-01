@@ -20,7 +20,6 @@ const MyChat = ({ fetchAgain }) => {
 
       const { data } = await axios.get("/api/chat", config);
       setChats(data);
-    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       toast.error("Error in loading the chat");
     }
@@ -34,112 +33,135 @@ const MyChat = ({ fetchAgain }) => {
     }
   }, [fetchAgain]);
 
+  const getInitials = (name) => {
+    if (!name) return "?";
+    return name
+      .split(" ")
+      .map(word => word.charAt(0))
+      .join("")
+      .substring(0, 2)
+      .toUpperCase();
+  };
+
+  const getAvatarColor = (name) => {
+    if (!name) return "bg-gray-500";
+    const colors = [
+      "bg-blue-500",
+      "bg-green-500", 
+      "bg-purple-500",
+      "bg-pink-500",
+      "bg-indigo-500",
+      "bg-yellow-500",
+      "bg-red-500",
+      "bg-teal-500"
+    ];
+    const index = name.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
+
   return (
     <div
-      className={`bg-gray-900/60 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 shadow-2xl
-      w-full  h-full relative overflow-hidden
-      ${selectedChat ? "hidden sm:block" : "block"}`}
+      className={` dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl
+      w-full h-full flex flex-col overflow-hidden shadow-sm
+      ${selectedChat ? "hidden sm:flex" : "flex"}`}
     >
-      {/* Decorative gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none rounded-2xl"></div>
-      
-      <div className="relative z-10 h-full flex flex-col">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-700/50">
-          <h5 className="m-0 text-xl font-bold text-white bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            My Chats
-          </h5>
-          <GroupChatModal>
-            <button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 text-sm">
-              New Group +
-            </button>
-          </GroupChatModal>
-        </div>
+      {/* Header */}
+      <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+        <h2 className="text-lg font-semibold text-white">
+          My Chats
+        </h2>
+        <GroupChatModal>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-medium transition-colors duration-200 text-sm flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            New Group
+          </button>
+        </GroupChatModal>
+      </div>
 
-        {/* Chat List */}
-        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-track-gray-800/50 scrollbar-thumb-gray-600/50 hover:scrollbar-thumb-gray-500/50">
-          {chats ? (
-            <div className="space-y-2">
+      {/* Chat List */}
+      <div className="flex-1 overflow-y-auto">
+        {chats ? (
+          chats.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center p-8">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No chats yet</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Start a conversation or create a group chat</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-100 dark:divide-gray-800">
               {chats.map((chat) => {
                 const senderName = !chat.isGroupChat
                   ? getSender(user, chat.users)
                   : chat.chatName;
+                const isSelected = selectedChat?._id === chat._id;
 
                 return (
                   <button
                     key={chat._id}
                     onClick={() => setSelectedChat(chat)}
-                    className={`w-full text-left p-4 rounded-xl transition-all duration-200 group relative overflow-hidden
-                      ${
-                        selectedChat === chat
-                          ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-blue-500/30 shadow-lg"
-                          : "bg-gray-800/40 hover:bg-gray-700/60 text-gray-300 hover:text-white border border-gray-700/30 hover:border-gray-600/50"
+                    className={`w-full text-left p-4 transition-colors duration-150 hover:bg-gray-50 dark:hover:bg-gray-800/50 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-800/50
+                      ${isSelected 
+                        ? "bg-blue-50 dark:bg-blue-900/20 border-r-2 border-blue-500" 
+                        : "bg-white dark:bg-gray-900"
                       }`}
                   >
-                    {/* Subtle glow effect for selected chat */}
-                    {selectedChat === chat && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl"></div>
-                    )}
-                    
-                    <div className="relative z-10 flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        {/* Avatar placeholder */}
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold
-                          ${selectedChat === chat 
-                            ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white" 
-                            : "bg-gray-700 text-gray-300 group-hover:bg-gray-600"
-                          }`}>
-                          {senderName?.charAt(0)?.toUpperCase()}
-                        </div>
-                        
-                        <div className="flex-1">
-                          <div className="font-medium truncate">
-                            {senderName}
-                          </div>
-                          {chat.isGroupChat && (
-                            <div className="text-xs text-gray-400 mt-1">
-                              {chat.users?.length} members
-                            </div>
-                          )}
-                        </div>
+                    <div className="flex items-center space-x-3">
+                      {/* Avatar */}
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 ${getAvatarColor(senderName)}`}>
+                        {getInitials(senderName)}
                       </div>
                       
-                      {/* Online indicator for individual chats */}
-                      {!chat.isGroupChat && (
-                        <div className="w-3 h-3 bg-green-500 rounded-full opacity-70"></div>
-                      )}
+                      {/* Chat Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h3 className={`font-medium truncate ${isSelected ? "text-blue-700 dark:text-blue-300" : "text-gray-900 dark:text-white"}`}>
+                            {senderName}
+                          </h3>
+                          {chat.latestMessage && (
+                            <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 ml-2">
+                              {new Date(chat.latestMessage.createdAt).toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="flex items-center justify-between mt-1">
+                          <div className="flex-1 min-w-0">
+                            {chat.isGroupChat && (
+                              <p className="text-xs text-gray-800 dark:text-gray-1000 truncate">
+                                {chat.users?.length} {chat.users?.length === 1 ? 'member' : 'members'}
+                              </p>
+                            )}
+                            {chat.latestMessage && (
+                              <p className="text-sm text-gray-600 dark:text-gray-400 truncate mt-0.5">
+                                {chat.latestMessage.sender._id === user._id ? "You: " : `${chat.latestMessage.sender.name}: `}
+                                {chat.latestMessage.content}
+                              </p>
+                            )}
+                          </div>
+                          
+                        </div>
+                      </div>
                     </div>
                   </button>
                 );
               })}
             </div>
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <ChatLoading />
-            </div>
-          )}
-        </div>
+          )
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <ChatLoading />
+          </div>
+        )}
       </div>
-      
-      <style jsx="true">{`
-        .scrollbar-thin::-webkit-scrollbar {
-          width: 6px;
-        }
-        
-        .scrollbar-track-gray-800\\/50::-webkit-scrollbar-track {
-          background: rgba(31, 41, 55, 0.5);
-          border-radius: 10px;
-        }
-        
-        .scrollbar-thumb-gray-600\\/50::-webkit-scrollbar-thumb {
-          background: rgba(75, 85, 99, 0.5);
-          border-radius: 10px;
-        }
-        
-        .hover\\:scrollbar-thumb-gray-500\\/50::-webkit-scrollbar-thumb:hover {
-          background: rgba(107, 114, 128, 0.5);
-        }
-      `}</style>
     </div>
   );
 };

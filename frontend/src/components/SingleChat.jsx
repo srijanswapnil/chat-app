@@ -9,11 +9,12 @@ import toast from "react-hot-toast";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 
-const ENDPOINT = "";
-var socket, selectedChatCompare;
+const ENDPOINT = "http://localhost:5000"; 
+let socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
-  const { user, selectedChat, notification, setNotification } = ChatState();
+  const { user, selectedChat, setSelectedChat, notification, setNotification } =
+    ChatState();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -23,6 +24,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
+  // ================= Send Message ==================
   const sendMessage = async (event) => {
     event.preventDefault();
 
@@ -50,30 +52,40 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+  // ================= Socket Setup ==================
   useEffect(() => {
+    if (!user) return;
+
     socket = io(ENDPOINT);
-    socket.emit("setup", user);
-    socket.on("Connected", () => {
-      setSocketConnected(true);
-    });
+
+    socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
-  }, []);
 
+    return () => {
+      socket.off("connected");
+      socket.off("typing");
+      socket.off("stop typing");
+      socket.disconnect();
+    };
+  }, [user]);
+
+  // ================= Typing Handler ==================
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
 
-    if (!socketConnected) return;
+    if (!socketConnected || !selectedChat?._id) return;
 
     if (!typing) {
       setTyping(true);
       socket.emit("typing", selectedChat._id);
     }
     let lastTypingTime = new Date().getTime();
-    var timerLength = 3000;
+    const timerLength = 3000;
+
     setTimeout(() => {
-      var timeNow = new Date().getTime();
-      var timeDiff = timeNow - lastTypingTime;
+      let timeNow = new Date().getTime();
+      let timeDiff = timeNow - lastTypingTime;
       if (timeDiff >= timerLength && typing) {
         socket.emit("stop typing", selectedChat._id);
         setTyping(false);
@@ -81,6 +93,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }, timerLength);
   };
 
+  // ================= Fetch Messages ==================
   const fetchMessages = async () => {
     if (!selectedChat) return;
 
@@ -110,28 +123,30 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
+  // ================= Handle Incoming Messages ==================
   useEffect(() => {
     const handleMessage = (newMessageReceived) => {
-      setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
-    };
-  
-    const handleNotification = (newMessageReceived) => {
-      if (!selectedChat || selectedChat._id !== newMessageReceived.chat._id) {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageReceived.chat._id
+      ) {
+        // not current chat → add as notification
         setNotification((prev) => [newMessageReceived, ...prev]);
         setFetchAgain((prev) => !prev);
+      } else {
+        // current chat → append to messages
+        setMessages((prev) => [...prev, newMessageReceived]);
       }
     };
-  
+    console.log(notification,"poup9uol8iwtcegld")
     socket.on("message received", handleMessage);
-    socket.on("notification received", handleNotification);
-  
+
     return () => {
       socket.off("message received", handleMessage);
-      socket.off("notification received", handleNotification);
     };
-  }, [selectedChat, socket]);
-  
+  }, [selectedChat]);
 
+  // ================= UI ==================
   return (
     <div className="flex flex-col w-full h-full">
       {selectedChat ? (
@@ -184,7 +199,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             className="flex px-4 py-3 gap-2 border-t border-gray-700 bg-gray-900"
             onSubmit={sendMessage}
           >
-            {isTyping ? <div>Typing...</div> : <></>}
+            {isTyping ? <div>Typing...</div> : null}
             <input
               type="text"
               placeholder="Enter message..."

@@ -53,7 +53,7 @@ const SideDrawer = () => {
   };
 
   const handleModal = () => {
-    console.log("Chutiya vs code");
+    console.log("vs code");
     setProfileOpen(true);
   };
 

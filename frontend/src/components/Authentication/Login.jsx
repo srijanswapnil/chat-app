@@ -1,7 +1,6 @@
 import axios from "../../axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     setLoading(true);
 
     if (!email || !password) {
@@ -46,15 +45,17 @@ const Login = () => {
       <div className="bg-gray-800/80 backdrop-blur-sm text-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-700/50 p-8 relative overflow-hidden">
         {/* Decorative gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 pointer-events-none"></div>
-        
+
         <div className="relative z-10">
           <h2 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             Login
           </h2>
-          
+
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Email
+              </label>
               <input
                 type="email"
                 className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
@@ -66,7 +67,9 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Password
+              </label>
               <input
                 type="password"
                 className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-white placeholder-gray-400 backdrop-blur-sm"
@@ -106,9 +109,12 @@ const Login = () => {
 
           <p className="text-center text-sm mt-6 text-gray-400">
             Don't have an account?{" "}
-            <a href="/signup" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors duration-200 font-medium">
-              Home
-            </a>
+            <Link
+              to="/signup"
+              className="text-blue-400 hover:text-blue-300 hover:underline transition-colors duration-200 font-medium"
+            >
+              Signup
+            </Link>
           </p>
         </div>
       </div>
